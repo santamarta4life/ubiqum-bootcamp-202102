@@ -1,19 +1,33 @@
 const initialState = {
-    cities:[]
+    cities: [],
+    filteredCities:[]
 }
 
-function citiesReducer(state=initialState,action){
-    switch(action.type){
-        case "RETRIEVE_CITIES":{
-            return{
+function citiesReducer(state = initialState, action) {
+    switch (action.type) {
+        case "RETRIEVE_CITIES": {
+            return {
                 ...state,
-                cities:action.payload
+                cities: action.payload
             }
         }
-        case "RETRIEVE_CITIES_ERROR":{
-            return{
+        case "RETRIEVE_CITIES_ERROR": {
+            return {
                 ...state,
-                error:action.payload
+                error: action.payload
+            }
+        }
+        case "FILTER_CITIES": {
+            return {
+                ...state,
+                filteredCities: action.payload
+                
+            }
+        }
+        case "FILTER_CITIES_ERROR": {
+            return {
+                ...state,
+                error: action.payload
             }
         }
         default:
@@ -21,5 +35,8 @@ function citiesReducer(state=initialState,action){
     }
 }
 
-
 export default citiesReducer
+
+
+
+
