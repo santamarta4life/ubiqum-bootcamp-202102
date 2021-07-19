@@ -12,18 +12,19 @@ import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { NavLink } from 'react-router-dom'
 import FilterCities from './FilterCities';
-import retrieveAllCities from '../logic/retrieve-all-cities'
 import { connect } from 'react-redux';
-import { retrieveCities } from '../store/actions/cityActions';
+import { handleFilterCities, retrieveCities } from '../store/actions/cityActions';
 
 const mapStateToProps = (state) => ({
+    filteredCities: state.cities.filteredCities,
     cities: state.cities.cities,
     error: state.cities.error
 })
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        retrieveCities: () => dispatch(retrieveCities())
+        retrieveCities: () => dispatch(retrieveCities()),
+        handleFilterCities: filter => dispatch(handleFilterCities(filter))
     }
 }
 
@@ -33,63 +34,40 @@ class Cities extends Component {
         super()
         this.state = {
             isFetching: false,
-            cities: [],
             citiesFilter: ""
         }
     }
+
     componentDidMount() {
         this.props.retrieveCities()
     }
 
-    componentWillUnmount() {
-        this.timer = null
-    }
-
-    static getDerivedStateFromProps(props) {
-        const { cities } = props
-
-        return ({
-            cities
-        })
-    }
-
-
-    handleFilterCities = filter => {
-        retrieveAllCities()
-            .then(cities => {
-                const filteredCities = cities.filter(city => city.name.includes(filter))
-
-                this.setState({
-                    cities: filteredCities,
-                    isFetching: false
-                })
-            })
-            .catch(error => {
-                alert(error)
-            })
+    handleFilter = (filter) => {
+        this.props.handleFilterCities(filter)  
     }
 
     render() {
+        const { props: { cities, filteredCities }, state: { isFetching } } = this
 
-        const { state: { cities, isFetching } } = this
+        const _cities = filteredCities && filteredCities.length? filteredCities : cities
 
-        const listCitiesNames = cities.map((cities, index) => <ul key={index}> {cities.name} </ul>)
+        const cityNames = _cities.map((city, index) => <ul key={index}> {city.name} </ul>)
 
-        const listCitiesCountries = cities.map((cities, index) => <ul key={index}> {cities.country} </ul>)
+        const cityCountries = _cities.map((city, index) => <ul key={index}> {city.country} </ul>)
 
-        //const listCitiesImage = cities.map((cities,index) => <ul key={index}> {cities.img} </ul>)
+        //const listCitiesImage = cities.map((cities,index) => <ul key={index}><mg src={cities.img}> </ul>)
 
         return <div><h2>City List</h2>
             <Box>
                 <p>Search a city name:</p>
-                <FilterCities onChange={this.handleFilterCities} />
+                <FilterCities onChange={this.handleFilter} />
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
                             <TableRow><TableCell align="center">City</TableCell><TableCell align="center">Country</TableCell></TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow><TableCell align="center">{listCitiesNames}</TableCell><TableCell align="center">{listCitiesCountries}</TableCell></TableRow>
+                            <TableRow><TableCell align="center">{cityNames}</TableCell><TableCell align="center">{cityCountries}</TableCell></TableRow>
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -100,5 +78,6 @@ class Cities extends Component {
         </div>
     }
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(Cities)
 
