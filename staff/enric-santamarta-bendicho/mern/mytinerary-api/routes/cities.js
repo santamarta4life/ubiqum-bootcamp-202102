@@ -1,8 +1,11 @@
 const express = require('express')
 
 const router = express.Router()
+const retrieveAllCities = require('../logic/retrieve-all-cities')
+const retrieveCitiesByName = require('../logic/retrieve-city-by-name')
+const createCity = require('../logic/create-city')
 
-const cityModel = require('../model/cityModel')
+
 
 router.get('/test', (req, res) => {
     res.send({ msg: 'Here is the cities test route.' })
@@ -12,38 +15,35 @@ router.get('/test', (req, res) => {
 /*get all the cities*/
 router.get('/all',
     (req, res) => {
-        cityModel.find({})
+        retrieveAllCities()
             .then(cities => {
                 res.send(cities)
             })
             .catch(err => console.log(err))
     })
 
+/*get a specific city after its name*/
+router.get('/:name',
+    (req, res) => {
+        retrieveCitiesByName(req.params.name)
+            .then(city => {
+                res.send(city)
+            })
+            .catch(err => console.log(err));
+    });
+
 /*post cities*/
 router.post('/', (req, res) => {
-    const newCity = new cityModel({
-        name: req.body.name,
-        country: req.body.country,
-        img: req.body.img
-    })
-    cityModel.findOne({ name: newCity.name, country:newCity.country }, function (err, cityModel) {
-        if (err) { 
-            console.log(err) }
-        if (cityModel) {
-        res.send({ error: "The city " + newCity.name + " from " + newCity.country + " already exists in the database", newCity})
-        
-        console.log("The city " + newCity.name + " already exists in the database")
-        } else {
-            newCity.save()
-                .then(city => {
-                    res.send(city)
-                })
-                .catch(err => {
-                    res.status(500).send("Server Error")
-                })
+    const { body: { name, country, image } } = req
 
-        }
-    })
+    createCity(name, country, image)
+        .then(city => {
+            res.send(city)
+        })
+        .catch(err => {
+            res.status(500).send("Server Error")
+        })
+
 })
 
 module.exports = router
