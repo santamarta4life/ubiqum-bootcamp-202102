@@ -14,7 +14,9 @@ import { NavLink } from 'react-router-dom'
 import FilterCities from './FilterCities';
 import { connect } from 'react-redux';
 import { handleFilterCities, retrieveCities } from '../store/actions/cityActions';
+import { retrieveItineraries } from '../store/actions/itineraryActions'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+
 
 
 
@@ -27,7 +29,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         retrieveCities: () => dispatch(retrieveCities()),
-        handleFilterCities: filter => dispatch(handleFilterCities(filter))
+        handleFilterCities: filter => dispatch(handleFilterCities(filter)),
+        retrieveItineraries: city => dispatch(retrieveItineraries(city))
     }
 }
 
@@ -36,17 +39,26 @@ class Cities extends Component {
     constructor() {
         super()
         this.state = {
-            isFetching: false
+            isFetching: false,
         }
     }
 
     componentDidMount() {
         this.props.retrieveCities()
+
+
     }
 
     handleFilter = (filter) => {
         this.props.handleFilterCities(filter)
     }
+
+    handleClick = (event) => {
+        const city = event.target.innerText
+        
+        this.props.retrieveItineraries(city)
+    }
+
 
     render() {
         const { props: { cities, filteredCities }, state: { isFetching } } = this
@@ -83,16 +95,18 @@ class Cities extends Component {
             <Box>
                 <p>Search a city name:</p>
                 <FilterCities onChange={this.handleFilter} />
-                <TableContainer component={Paper} size="small">
-                    <Table size="small">
-                        <TableHead>
-                            <StyledTableRow><StyledTableCell align="center">City</StyledTableCell><StyledTableCell align="center" size="small">Image</StyledTableCell><StyledTableCell align="center">Country</StyledTableCell></StyledTableRow>
-                        </TableHead>
-                        <TableBody>
-                            <StyledTableRow><StyledTableCell align="center">{cityNames}</StyledTableCell><StyledTableCell align="center">{listCitiesImage}</StyledTableCell><StyledTableCell align="center">{cityCountries}</StyledTableCell></StyledTableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <form onClick={this.handleClick}>
+                    <TableContainer component={Paper} size="small">
+                        <Table size="small">
+                            <TableHead>
+                                <StyledTableRow><StyledTableCell align="center">City</StyledTableCell><StyledTableCell align="center" size="small">Image</StyledTableCell><StyledTableCell align="center">Country</StyledTableCell></StyledTableRow>
+                            </TableHead>
+                            <TableBody>
+                                <StyledTableRow><StyledTableCell align="center">{cityNames}</StyledTableCell><StyledTableCell align="center">{listCitiesImage}</StyledTableCell><StyledTableCell align="center">{cityCountries}</StyledTableCell></StyledTableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </form>
                 <footer>
                     <NavLink to='/' ><Button><img src={Home} alt="return home" /> </Button></NavLink>
                 </footer>

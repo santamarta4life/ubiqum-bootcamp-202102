@@ -22,9 +22,9 @@ router.get('/all',
     })
 
 /*get a specific itinerary after its name*/
-router.get('/:name',
+router.get('/:city',
     (req, res) => {
-        retrieveItinerariesByName(req.params.name)
+        retrieveItinerariesByName(req.params.city)
             .then(itinerary => {
                 res.send(itinerary)
             })

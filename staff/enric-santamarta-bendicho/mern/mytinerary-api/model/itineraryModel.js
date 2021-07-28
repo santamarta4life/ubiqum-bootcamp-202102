@@ -11,14 +11,14 @@ const itinerarySchema = new mongoose.Schema({
         required: true
     },
     hashtags: {
-        type: String, //array de strings
+        type: [String], 
         required: true
     }, 
     rating: {
         type: String,
         required: true
     }, 
-    name: {
+    city: {
         type: String,
         required: true
     }, 
