@@ -11,46 +11,31 @@ import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
-import { retrieveItineraries } from '../store/actions/itineraryActions'
-
 
 const mapStateToProps = (state) => ({
-    itineraries: state.itineraries.itineraries,
-    error: state.itineraries.error
+    activities: state.activities.activities,
+    error: state.activities.error
 })
 
-
-class Itinerary extends Component {
-    constructor() {
+class Activities extends Component {
+    constructor(){
         super()
-        this.state = {
-            city:''
+        this.state ={
         }
     }
 
-    componentDidMount(){
-        this.setState({city:this.props.itineraries.city})
-    }
+    render(){
 
+        const { props: { activities } } = this
 
-    render() {
+        const activitiesRender = activities.map((activity, index) => <TableRow key={index}><TableCell key={index}>{activity.activity}<img style={{ width: 200, height: 100 }} alt="activity itineraries" src={activity.image} /></TableCell></TableRow>)
 
-        const { props: { itineraries } } = this
-
-        const itinerariesRender = itineraries.map((itinerary, index) => <TableRow> <TableCell key={index}> {itinerary.title} {itinerary.duration} {itinerary.rating} <img style={{ width: 200, height: 100 }} alt="city itineraries" src={itinerary.profilePicture} />  </TableCell></TableRow>)
-
-
-
-        return <div><h2>Itineraries in </h2>
+        return <div><h2>Activities</h2>
             <Box>
-                <h2></h2>
                 <TableContainer component={Paper} size="small">
                     <Table size="small">
-                        <TableHead>
-
-                        </TableHead>
                         <TableBody>
-                            {itinerariesRender}
+                            {activitiesRender}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -62,4 +47,5 @@ class Itinerary extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Itinerary)
+
+export default connect(mapStateToProps) (Activities)

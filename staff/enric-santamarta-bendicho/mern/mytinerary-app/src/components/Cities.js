@@ -14,7 +14,7 @@ import { NavLink } from 'react-router-dom'
 import FilterCities from './FilterCities';
 import { connect } from 'react-redux';
 import { handleFilterCities, retrieveCities } from '../store/actions/cityActions';
-import { retrieveItineraries } from '../store/actions/itineraryActions'
+import { retrieveItineraries } from '../store/actions/itinerariesActions'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 
@@ -65,7 +65,7 @@ class Cities extends Component {
 
         const _cities = filteredCities && filteredCities.length ? filteredCities : cities
 
-        const cityNames = _cities.map((city, index) => <ul key={index}><NavLink to='/itinerary'><button> {city.name} </button></NavLink> </ul>)
+        const cityNames = _cities.map((city, index) => <ul key={index}><NavLink to='/itineraries'><button> {city.name} </button></NavLink> </ul>)
 
         const cityCountries = _cities.map((city, index) => <ul key={index}> {city.country} </ul>)
 
