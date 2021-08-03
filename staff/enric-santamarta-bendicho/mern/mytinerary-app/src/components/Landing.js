@@ -41,7 +41,7 @@ function Landing() {
 
   const classes = useStyles();
 
-  return (<div className={classes.landing}>
+  return (<Box display="flex" className={classes.landing}>
     <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>
       <Box bgcolor="error.main" borderRadius={40} className={classes.box}>
         <div>
@@ -55,15 +55,12 @@ function Landing() {
         </div>
         <div>
           <p>Want to build your own MYtinerary?</p>
-          <Button>Log in</Button>
+          <Button><NavLink to='/createaccount'>Log in</NavLink></Button>
           <Button>Create Account</Button>
         </div>
       </Box>
-      <footer className={classes.footer}>
-        <Button><img className={classes.logo} src={Home} alt="return home" /> </Button>
-      </footer>
     </Box>
-  </div>)
+  </Box>)
 }
 
 export default Landing

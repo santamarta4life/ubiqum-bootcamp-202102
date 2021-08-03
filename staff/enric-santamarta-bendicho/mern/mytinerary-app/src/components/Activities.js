@@ -11,41 +11,77 @@ import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles({
+    applogo: {
+        fontFamily: '"Helvetica Neue"',
+        fontDisplay: 'swap',
+        margin: 'auto',
+        color: 'white',
+        fontWeight: 10000,
+        fontSize: 50,
+        padding: 20
+
+    },
+    logo: {
+        width: 80
+    },
+    activities: {
+        minWidth: 800
+    },
+    bigbox: {
+        width: 800,
+        margin: 'auto'
+    },
+    box: {
+        width: 650,
+        margin: 'auto'
+    },
+    footer: {
+        margin: 'auto'
+    },
+    tablecell: {
+        borderBottom: 'none'
+    }
+
+});
 
 const mapStateToProps = (state) => ({
     activities: state.activities.activities,
     error: state.activities.error
 })
 
-class Activities extends Component {
-    constructor(){
-        super()
-        this.state ={
-        }
-    }
+function Activities({ activities }) {
 
-    render(){
+    const classes = useStyles();
 
-        const { props: { activities } } = this
+    const activitiesRender = activities.map((activity, index) => <TableRow key={index}><TableCell className={classes.tablecell} align="center" key={index}><h2>{activity.activity}</h2></TableCell><TableCell className={classes.tablecell}><img style={{ width: 200, height: 100 }} alt="activity itineraries" src={activity.image} /></TableCell></TableRow>)
 
-        const activitiesRender = activities.map((activity, index) => <TableRow key={index}><TableCell key={index}>{activity.activity}<img style={{ width: 200, height: 100 }} alt="activity itineraries" src={activity.image} /></TableCell></TableRow>)
-
-        return <div><h2>Activities</h2>
-            <Box>
-                <TableContainer component={Paper} size="small">
-                    <Table size="small">
-                        <TableBody>
-                            {activitiesRender}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <footer>
-                    <NavLink to='/' ><Button><img src={Home} alt="return home" /> </Button></NavLink>
-                </footer>
+    return <div className={classes.activities}>
+        <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>
+            <Box className={classes.box} bgcolor="error.main" borderRadius={40} className={classes.box}>
+                <div>
+                    <h1 className={classes.applogo}>Activities in</h1>
+                </div>
+                <div>
+                    <TableContainer>
+                            <Table size="small">
+                                <TableBody>
+                                    {activitiesRender}
+                                </TableBody>
+                            </Table>
+                    </TableContainer>
+                </div>
             </Box>
-        </div>
-    }
+            <footer className={classes.footer}>
+                <NavLink to='/' ><Button><img className={classes.logo} src={Home} alt="return home" /> </Button></NavLink>
+            </footer>
+        </Box>
+    </div>
+
 }
 
 
-export default connect(mapStateToProps) (Activities)
+export default connect(mapStateToProps)(Activities)

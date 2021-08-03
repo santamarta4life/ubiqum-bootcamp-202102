@@ -6,7 +6,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
@@ -15,8 +14,55 @@ import FilterCities from './FilterCities';
 import { connect } from 'react-redux';
 import { handleFilterCities, retrieveCities } from '../store/actions/cityActions';
 import { retrieveItineraries } from '../store/actions/itinerariesActions'
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
+
+const useStyles = theme => ({
+    applogo: {
+        fontFamily: '"Helvetica Neue"',
+        fontDisplay: 'swap',
+        margin: 'auto',
+        color: 'white',
+        fontWeight: 10000,
+        fontSize: 50,
+        padding: 20
+
+    },
+    text: {
+        fontFamily: '"Helvetica Neue"',
+        fontDisplay: 'swap',
+        margin: 'auto',
+        color: 'black',
+        fontWeight: 600,
+        fontSize: 25,
+        padding: 20
+    },
+    logo: {
+        width: 80
+    },
+    cities: {
+        minWidth: 800
+    },
+    bigbox: {
+        width: 800,
+        margin: 'auto'
+    },
+    box: {
+        width: 650,
+        margin: 'auto'
+    },
+    footer: {
+        margin: 'auto'
+    },
+    tablecell: {
+        borderBottom: 'none'
+    },
+    button: {
+
+    }
+
+});
 
 
 
@@ -55,65 +101,50 @@ class Cities extends Component {
 
     handleClick = (event) => {
         const city = event.target.innerText
-        
+
         this.props.retrieveItineraries(city)
     }
 
 
     render() {
+
+        const { classes } = this.props
+
         const { props: { cities, filteredCities }, state: { isFetching } } = this
 
         const _cities = filteredCities && filteredCities.length ? filteredCities : cities
 
-        const cityNames = _cities.map((city, index) => <ul key={index}><NavLink to='/itineraries'><button> {city.name} </button></NavLink> </ul>)
-
-        const cityCountries = _cities.map((city, index) => <ul key={index}> {city.country} </ul>)
-
-        const listCitiesImage = _cities.map((city, index) => <ul key={index}><img style={{ width: 200, height: 100 }} alt="city" src={city.image} /> </ul>)
-
-        const StyledTableCell = withStyles((theme) => ({
-            head: {
-                backgroundColor: theme.palette.common.black,
-                color: theme.palette.common.white,
-            },
-            body: {
-                fontSize: 14,
-            },
-        }))(TableCell);
-
-        const StyledTableRow = withStyles((theme) => ({
-            root: {
-                '&:nth-of-type(odd)': {
-                    backgroundColor: theme.palette.action.hover,
-                },
-            },
-        }))(TableRow);
+        const citiesRender = _cities.map((city, index) => <TableRow key={index}><TableCell key={index} className={classes.tablecell} align="center"><NavLink to='/itineraries'><button> {city.name} </button></NavLink> </TableCell><TableCell className={classes.tablecell} align="center"><img style={{ width: 200, height: 100 }} alt="city" src={city.image} /> </TableCell><TableCell className={classes.tablecell} align="center"> {city.country} </TableCell></TableRow>)
 
 
-
-        return <div><h2>City List</h2>
-            <Box>
-                <p>Search a city name:</p>
-                <FilterCities onChange={this.handleFilter} />
-                <form onClick={this.handleClick}>
-                    <TableContainer component={Paper} size="small">
-                        <Table size="small">
-                            <TableHead>
-                                <StyledTableRow><StyledTableCell align="center">City</StyledTableCell><StyledTableCell align="center" size="small">Image</StyledTableCell><StyledTableCell align="center">Country</StyledTableCell></StyledTableRow>
-                            </TableHead>
-                            <TableBody>
-                                <StyledTableRow><StyledTableCell align="center">{cityNames}</StyledTableCell><StyledTableCell align="center">{listCitiesImage}</StyledTableCell><StyledTableCell align="center">{cityCountries}</StyledTableCell></StyledTableRow>
-                            </TableBody>
-                        </Table>
+        return <Box className={classes.cities}>
+            <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox} >
+                <Box className={classes.box} bgcolor="error.main" borderRadius={40} textAlign="center" >
+                            <h1 className={classes.applogo}>City List</h1>
+                            <p>Search a city name:</p>
+                            <FilterCities onChange={this.handleFilter} />
+                            <TableContainer>
+                        <form onClick={this.handleClick}>
+                                <Table size="small">
+                                    <TableHead>
+                                        <TableRow><TableCell className={classes.tablecell} align="center"><p className={classes.text}>City</p></TableCell><TableCell className={classes.tablecell} align="center"><p className={classes.text}>Image</p></TableCell><TableCell className={classes.tablecell} align="center"><p className={classes.text}>Country</p></TableCell></TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {citiesRender}
+                                    </TableBody>
+                                </Table>
+                            </form>
                     </TableContainer>
-                </form>
-                <footer>
-                    <NavLink to='/' ><Button><img src={Home} alt="return home" /> </Button></NavLink>
+                </Box>
+                <footer className={classes.footer}>
+                    <NavLink to='/' ><Button><img className={classes.logo} src={Home} alt="return home" /> </Button></NavLink>
                 </footer>
             </Box>
-        </div>
+        </Box>
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cities)
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Cities))
+
+
 

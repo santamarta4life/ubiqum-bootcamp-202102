@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import './App.css';
 import Itineraries from './components/Itineraries';
 import Activities from './components/Activities'
+import CreateAccount from './components/CreateAccount'
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route exact path='/cities' component={Cities} />
           <Route exact path='/itineraries' component={Itineraries} />
           <Route exact path='/activities' component={Activities} />
+          <Route exact path='/createaccount' component={CreateAccount} />
         </Switch>
       </BrowserRouter>
     </div>
