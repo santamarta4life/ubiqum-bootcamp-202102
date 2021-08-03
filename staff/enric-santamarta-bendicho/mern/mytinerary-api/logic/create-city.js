@@ -6,7 +6,6 @@ module.exports.cities = (name, country, image) => {
         country,
         image
     })
-
     return cityModel.findOne({ name, country })
         .then(city => {
             if (city)
