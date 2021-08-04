@@ -1,4 +1,8 @@
 const express = require('express')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const { body, validationResult } = require('express-validator');
+
 
 const router = express.Router()
 
@@ -24,16 +28,25 @@ router.get('/all',
 
 
 /*post users*/
-router.post('/', (req, res) => {
+router.post('/', body('email').isEmail(), body('password').isLength({ min: 5 }), (req, res) => {
     const { body: { username, email, password, foto } } = req
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-    createUser(username, email, password, foto)
-        .then(user => {
-            res.send(user)
-        })
-        .catch(err => {
-            res.status(500).send("Server Error")
-        })
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+
+        // Store hash in your password DB.
+
+        createUser(username, email, hash, foto)
+            .then(user => {
+                res.send(user)
+            })
+            .catch(err => {
+                res.status(500).send(err.message)
+            })
+    });
 
 })
 

@@ -1,6 +1,6 @@
 const cityModel = require('../model/cityModel')
 
-module.exports.cities = (name, country, image) => {
+module.exports = (name, country, image) => {
     const newCity = new cityModel({
         name,
         country,
@@ -12,5 +12,5 @@ module.exports.cities = (name, country, image) => {
                 throw new Error("The city " + name + " from " + country + " already exists in the database")
 
             return newCity.save()
-        })    
+        })
 }

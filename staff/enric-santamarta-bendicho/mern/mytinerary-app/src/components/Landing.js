@@ -55,8 +55,8 @@ function Landing() {
         </div>
         <div>
           <p>Want to build your own MYtinerary?</p>
-          <Button><NavLink to='/createaccount'>Log in</NavLink></Button>
-          <Button>Create Account</Button>
+          <Button>Log in</Button>
+          <Button><NavLink to='/createaccount'>Create Account</NavLink></Button>
         </div>
       </Box>
     </Box>

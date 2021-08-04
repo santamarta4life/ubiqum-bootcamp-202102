@@ -15,7 +15,7 @@ app.use(
         extended: true
     })
 )
-app.use(cors())
+app.use(cors()) 
 //middleware
 
 mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })

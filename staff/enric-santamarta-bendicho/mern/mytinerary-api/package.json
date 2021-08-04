@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"nodemon server.js\" \"cd ../mytinerary-app && npm start\""
+    "devel": "concurrently \"nodemon server.js\" \"cd ../mytinerary-app && npm start\"",
+    "start": "node server.js",
+    "debug": "node --inspect-brk server.js"
   },
   "repository": {
     "type": "git",
@@ -18,8 +20,13 @@
   },
   "homepage": "https://github.com/death4santamarta/mytinerary-server#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.12.14"
+    "express-validator": "^6.12.1",
+    "mongoose": "^5.12.14",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^4.0.3"
   }
 }
