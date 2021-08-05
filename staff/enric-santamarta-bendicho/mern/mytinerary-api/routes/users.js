@@ -28,14 +28,14 @@ router.get('/all',
 
 
 /*post users*/
-router.post('/', body('email').isEmail(), body('password').isLength({ min: 5 }), (req, res) => {
-    const { body: { username, email, password, foto } } = req
+router.post('/', body('email').isEmail(), body('userpassword').isLength({ min: 5 }), (req, res) => {
+    const { body: { username, email, userpassword, foto } } = req
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    bcrypt.hash(password, saltRounds, function (err, hash) {
+    bcrypt.hash(userpassword, saltRounds, function (err, hash) {
 
         // Store hash in your password DB.
 

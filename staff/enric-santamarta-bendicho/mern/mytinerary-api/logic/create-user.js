@@ -1,10 +1,10 @@
 const userModel = require('../model/userModel')
 
-module.exports = (username, email, password, foto) => {
+module.exports = (username, email, userpassword, foto) => {
     const newUser = new userModel({
         username, 
         email, 
-        password, 
+        userpassword, 
         foto
     })
     return userModel.findOne({ username, email }) 

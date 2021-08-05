@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Home from './images/homeIcon.png';
 import { connect } from 'react-redux';
+import { createAccount } from '../store/actions/createAccountActions';
 
 const useStyles = theme => ({
     applogo: {
@@ -40,10 +41,15 @@ const useStyles = theme => ({
 
 });
 
+const mapStateToProps = (state) => ({
+    users: state.users.users,
+    error: state.users.error
+})
+
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        sendUserData: () => dispatch(sendUserData())
+        createAccount: (username,email,userpassword,foto) => dispatch(createAccount(username,email,userpassword,foto))
     }
 }
 
@@ -75,7 +81,12 @@ class CreateAccount extends Component {
     }
 
     handleSubmit(event) {
-      
+        event.preventDefault()
+
+        const {state :{username, email, userpassword, foto}} = this
+
+
+        this.props.createAccount(username,email,userpassword,foto)
     }
 
 
@@ -88,7 +99,7 @@ class CreateAccount extends Component {
             <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>
                 <Box className={classes.box} bgcolor="error.main" borderRadius={40}>
                     <h1 className={classes.applogo}>Create an Account</h1>
-                    <form onSubmit={this.handleSubmit}>
+                   { <form onSubmit={this.handleSubmit}>
                         <label>
                             <div>
                                 <p>Username:</p>
@@ -118,7 +129,7 @@ class CreateAccount extends Component {
                                 <input type="submit" value="Submit" />
                             </div>
                         </label>
-                    </form>
+                    </form> }
                 </Box>
                 <footer className={classes.footer}>
                     <NavLink to='/' ><Button><img className={classes.logo} src={Home} alt="return home" /> </Button></NavLink>
@@ -128,4 +139,9 @@ class CreateAccount extends Component {
     }
 }
 
-export default connect(mapDispatchToProps) (withStyles(useStyles)(CreateAccount))
+/*function Form() {
+    return(
+
+    )
+} */
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(useStyles)(CreateAccount))
