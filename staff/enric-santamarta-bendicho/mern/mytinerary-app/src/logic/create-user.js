@@ -1,5 +1,5 @@
-export default async function postUserData(username, email, userpassword, foto){ // register-user
-    const user =  { username, email, userpassword, foto };
+export default async function createUser(username, email, password, foto){ // register-user
+    const user =  { username, email, password, foto };
     let formBody = [];
     
     for (const property in user) {
@@ -10,14 +10,11 @@ export default async function postUserData(username, email, userpassword, foto){
 
     formBody = formBody.join('&');
 
-    const userData = await fetch('http://localhost:5000/users/', {
+    const createUser = await fetch('http://localhost:5000/users/', {
         method:'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
           },
         body: formBody
     })
-
-    //const content = await userData.json()
-  
 }

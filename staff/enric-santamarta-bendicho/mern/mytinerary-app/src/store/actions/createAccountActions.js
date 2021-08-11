@@ -1,17 +1,17 @@
-import postUserData from '../../logic/post-user-data'
+import createUser from '../../logic/create-user'
 
-export function createAccount(username,email,userpassword,foto) {
+export function createAccount(username, email, password, foto) {
     return dispatch => {
-        postUserData(username,email,userpassword,foto)
-            .then((username,email,userpassword,foto) =>
+        createUser(username, email, password, foto)
+            .then((username, email, password, foto) =>
                 dispatch({
                     type: "ADD_USER",
-                    payload: username,email,userpassword,foto
+                    payload: username, email, password, foto
                 }))
-                .catch(error =>
-                    dispatch({
-                        type: "ADD_USER_ERROR",
-                        payload: error.message
-                    }))
-        }
+            .catch(error =>
+                dispatch({
+                    type: "ADD_USER_ERROR",
+                    payload: error.message
+                }))
     }
+}

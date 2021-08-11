@@ -30,6 +30,8 @@ app.use('/activities', require('./routes/activities'))
 
 app.use('/users', require('./routes/users'))
 
+app.use('./users/login', require('./routes/users/login'))
+
 
 app.listen(port, () => { console.log("Server is running on " + port + " port") })
 

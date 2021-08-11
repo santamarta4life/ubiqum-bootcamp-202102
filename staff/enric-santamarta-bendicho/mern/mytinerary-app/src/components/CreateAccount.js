@@ -49,7 +49,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createAccount: (username,email,userpassword,foto) => dispatch(createAccount(username,email,userpassword,foto))
+        createAccount: (username, email, password, foto) => dispatch(createAccount(username, email, password, foto))
     }
 }
 
@@ -61,7 +61,7 @@ class CreateAccount extends Component {
         this.state = {
             username: '',
             email: '',
-            userpassword: '',
+            password: '',
             foto: ''
         }
         this.handleChange = this.handleChange.bind(this)
@@ -76,17 +76,15 @@ class CreateAccount extends Component {
         this.setState({
             [name]: value
         })
-
-
     }
 
     handleSubmit(event) {
         event.preventDefault()
 
-        const {state :{username, email, userpassword, foto}} = this
+        const { state: { username, email, password, foto } } = this
 
 
-        this.props.createAccount(username,email,userpassword,foto)
+        this.props.createAccount(username, email, password, foto)
     }
 
 
@@ -99,7 +97,7 @@ class CreateAccount extends Component {
             <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>
                 <Box className={classes.box} bgcolor="error.main" borderRadius={40}>
                     <h1 className={classes.applogo}>Create an Account</h1>
-                   { <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit}>
                         <label>
                             <div>
                                 <p>Username:</p>
@@ -115,7 +113,7 @@ class CreateAccount extends Component {
                         <label>
                             <div>
                                 <p>Password:</p>
-                                <input type="password" onChange={this.handleChange} value={this.state.userpassword} name="userpassword"></input>
+                                <input type="password" onChange={this.handleChange} value={this.state.password} name="password"></input>
                             </div>
                         </label>
                         <label>
@@ -129,7 +127,7 @@ class CreateAccount extends Component {
                                 <input type="submit" value="Submit" />
                             </div>
                         </label>
-                    </form> }
+                    </form>
                 </Box>
                 <footer className={classes.footer}>
                     <NavLink to='/' ><Button><img className={classes.logo} src={Home} alt="return home" /> </Button></NavLink>
@@ -139,9 +137,5 @@ class CreateAccount extends Component {
     }
 }
 
-/*function Form() {
-    return(
 
-    )
-} */
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(useStyles)(CreateAccount))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(CreateAccount))

@@ -2,7 +2,8 @@ const express = require('express')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const { body, validationResult } = require('express-validator');
-
+const key = require('../keys')
+const jwt = require("jsonwebtoken")
 
 const router = express.Router()
 
@@ -28,14 +29,14 @@ router.get('/all',
 
 
 /*post users*/
-router.post('/', body('email').isEmail(), body('userpassword').isLength({ min: 5 }), (req, res) => {
-    const { body: { username, email, userpassword, foto } } = req
+router.post('/', body('email').isEmail(), body('password').isLength({ min: 5 }), (req, res) => {
+    const { body: { username, email, password, foto } } = req
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    bcrypt.hash(userpassword, saltRounds, function (err, hash) {
+    bcrypt.hash(password, saltRounds, function (err, hash) {
 
         // Store hash in your password DB.
 
@@ -49,5 +50,20 @@ router.post('/', body('email').isEmail(), body('userpassword').isLength({ min: 5
     });
 
 })
+
+/*post login*/
+router.post('/login', (req, res) => {
+    const { body: { username,password } } = req
+
+    login(username,password)
+        .then(user => {
+            res.send(user)
+        })
+        .catch(err => {
+            res.status(500).send(err.message)
+        })
+
+})
+
 
 module.exports = router
