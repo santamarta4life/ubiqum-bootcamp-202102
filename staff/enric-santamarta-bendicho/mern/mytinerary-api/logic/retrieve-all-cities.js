@@ -1,3 +1,3 @@
-const cityModel = require('../model/cityModel')
+const cityModel = require('../models/cityModel')
 
 module.exports = () => cityModel.find({})

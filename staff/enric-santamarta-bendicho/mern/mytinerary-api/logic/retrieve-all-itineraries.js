@@ -1,3 +1,3 @@
-const itineraryModel = require('../model/activityModel')
+const itineraryModel = require('../models/activityModel')
 
 module.exports = () => activityModel.find({})

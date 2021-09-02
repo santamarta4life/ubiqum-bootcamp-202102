@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const app = express()
 const port = process.env.PORT || 5000
@@ -14,25 +15,20 @@ app.use(
     bodyParser.urlencoded({
         extended: true
     })
-)
-app.use(cors()) 
-//middleware
-
-mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
+    )
+    app.use(cors()) 
+    //middleware
+    
+    mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
     .then(() => console.log('Connection to MongoDB established'))
     .catch(err => console.log(err))
-
-app.use('/cities', require('./routes/cities'))
-
-app.use('/itineraries', require('./routes/itineraries'))
-
-app.use('/activities', require('./routes/activities'))
-
-app.use('/users', require('./routes/users'))
-
-app.use('./users/login', require('./routes/users/login'))
-
-
-app.listen(port, () => { console.log("Server is running on " + port + " port") })
-
-
+    
+    app.use('/cities', require('./routes/cities'))
+    
+    app.use('/itineraries', require('./routes/itineraries'))
+    
+    app.use('/activities', require('./routes/activities'))
+    
+    app.use('/users', require('./routes/users'))
+    
+    app.listen(port, () => { console.log("Server is running on " + port + " port") })

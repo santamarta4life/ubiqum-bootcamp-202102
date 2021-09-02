@@ -104,6 +104,7 @@ class Login extends Component {
                                     <input type="submit" value="Submit" />
                                 </div>
                             </label>
+                            <button>Register with Google</button>
                         </form>
                     </div>
 

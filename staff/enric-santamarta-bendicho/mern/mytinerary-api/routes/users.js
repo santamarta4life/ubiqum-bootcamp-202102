@@ -4,11 +4,21 @@ const saltRounds = 10;
 const { body, validationResult } = require('express-validator');
 const key = require('../keys')
 const jwt = require("jsonwebtoken")
+const passport = require('passport')
+const { authorize } = require('./passport')
+const User = require('../models/userModel');
+
+
 
 const router = express.Router()
 
 const retrieveAllUsers = require('../logic/retrieve-all-users')
 const createUser = require('../logic/create-user')
+const authenticateUser = require('../logic/authenticate-user');
+const retrieveUser = require('./handler/retrieve-user');
+
+
+router.use(passport.initialize())
 
 
 router.get('/test', (req, res) => {
@@ -29,15 +39,13 @@ router.get('/all',
 
 
 /*post users*/
-router.post('/', body('email').isEmail(), body('password').isLength({ min: 5 }), (req, res) => {
-    const { body: { username, email, password, foto } } = req
+router.post('/', body('email').isEmail().withMessage('please, introduce a valid e-mail adresse'), body('password').isLength({ min: 5 }).withMessage('password must be at least 5 chars long'), (req, res) => {
+   const { body: { username, email, password, foto } } = req
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
-    bcrypt.hash(password, saltRounds, function (err, hash) {
-
+   bcrypt.hash(password, saltRounds, function (err, hash) {
         // Store hash in your password DB.
 
         createUser(username, email, hash, foto)
@@ -46,24 +54,59 @@ router.post('/', body('email').isEmail(), body('password').isLength({ min: 5 }),
             })
             .catch(err => {
                 res.status(500).send(err.message)
-            })
-    });
+            }) 
+    }); 
 
 })
 
-/*post login*/
-router.post('/login', (req, res) => {
-    const { body: { username,password } } = req
+/*authenticate login*/
+router.post('/auth', body('email').isEmail().withMessage('please, introduce a valid e-mail adresse'), body('password').isLength({ min: 5 }).withMessage('password must be at least 5 chars long'),
+    (req, res) => {
+        const { body: { password, email } } = req
+        const errors = validationResult(req)
 
-    login(username,password)
-        .then(user => {
-            res.send(user)
-        })
-        .catch(err => {
-            res.status(500).send(err.message)
-        })
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-})
+        try {
+            authenticateUser(
+                email,
+                password,
+            )
+                .then(id => {
+                    const payload = {
+                        sub: id
+                    };
+                    const options = { expiresIn: 2592000 };
 
+                    jwt.sign(
+                        payload,
+                        key.secretOrKey,
+                        options,
+                        (err, token) => {
+                            if (err) {
+                                res.json({
+                                    success: false,
+                                    token: "There was an error"
+                                });
+                            } else {
+                                res.json({
+                                    success: true,
+                                    token: 'Bearer ' + token
+                                });
+                            }
+                        }
+                    );
+                })
+                .catch(err => res.status(500).send(err.message))
+        } catch (error) {
+            res.status(500).send(error.message)
+        }
+    })
+
+router.get('/', authorize, retrieveUser)
+
+router.get('/google')
 
 module.exports = router
