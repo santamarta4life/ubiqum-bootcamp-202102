@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import Home from './images/homeIcon.png'
+import { connect } from 'react-redux';
+import { registerUserAccount } from '../store/actions/registerActions';
 
 const useStyles = theme => ({
     applogo: {
@@ -39,6 +41,17 @@ const useStyles = theme => ({
 
 });
 
+const mapStateToProps = (state) => ({
+    account: state.account.account,
+    error: state.account.error
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        registerUserAccount: (username, email, password) => dispatch(registerUserAccount(username, email, password))
+    }
+}
+
 
 class Login extends Component {
     constructor() {
@@ -65,10 +78,10 @@ class Login extends Component {
     handleSubmit(event) {
         event.preventDefault()
 
-        /* const { state: { username, email, password, foto } } = this
- 
- 
-         this.props.createAccount(username, email, password, foto) */
+        const { state: { username, email, password } } = this
+
+
+        this.props.registerUserAccount(username, email, password)
     }
 
     render() {
@@ -104,7 +117,6 @@ class Login extends Component {
                                     <input type="submit" value="Submit" />
                                 </div>
                             </label>
-                            <button>Register with Google</button>
                         </form>
                     </div>
 
@@ -117,4 +129,4 @@ class Login extends Component {
     }
 }
 
-export default withStyles(useStyles)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Login))

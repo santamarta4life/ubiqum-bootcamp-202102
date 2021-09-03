@@ -107,6 +107,4 @@ router.post('/auth', body('email').isEmail().withMessage('please, introduce a va
 
 router.get('/', authorize, retrieveUser)
 
-router.get('/google')
-
 module.exports = router

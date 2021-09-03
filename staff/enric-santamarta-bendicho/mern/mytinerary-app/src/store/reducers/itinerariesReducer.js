@@ -22,9 +22,4 @@ function itinerariesReducer(state = initialState, action) {
     }
 }
 
-
-
-
-
-
 export default itinerariesReducer
