@@ -6,7 +6,7 @@ module.exports = id => {
     return (async () => {
         const user = await userModel.findById(id).lean()
 
-        if (!user)  throw new Error(`user with id ${id} not found`)
+        if (!user) throw new Error(`user with id ${id} not found`)
 
         delete user._id
         delete user.password

@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box'
 import Circle from './images/circled-right-2.png'
 import { MusicNoteSharp, AirplanemodeActiveSharp, RestaurantSharp, TrainSharp } from '@material-ui/icons';
-import Home from './images/homeIcon.png'
+import isUserLoggedIn from '../logic/is-user-logged-in';
 
 const useStyles = makeStyles({
   applogo: {
@@ -53,10 +53,12 @@ function Landing() {
         <div style={{ width: '100%' }}>
           <NavLink to='/cities'><Button><img className={classes.logo} src={Circle} alt="Page Cities" /></Button></NavLink>
         </div>
+        {isUserLoggedIn() && <div>PERFIL USUARIO</div>}
+        {!isUserLoggedIn() && <div>GO TO LOGIN</div>}
         <div>
           <p>Want to build your own MYtinerary?</p>
           <Button><NavLink to='/login'>Log in</NavLink></Button>
-          <Button><NavLink to='/createaccount'>Create Account</NavLink></Button>
+          <Button><NavLink to='/register'>Create Account</NavLink></Button>
         </div>
       </Box>
     </Box>

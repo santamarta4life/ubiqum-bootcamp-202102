@@ -1,11 +1,11 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect, withRouter } from 'react-router-dom'
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
-import { registerUserAccount } from '../store/actions/registerActions';
+import { authenticateUserAccount } from '../store/actions/userActions' ;
 
 const useStyles = theme => ({
     applogo: {
@@ -42,27 +42,30 @@ const useStyles = theme => ({
 });
 
 const mapStateToProps = (state) => ({
-    account: state.account.account,
-    error: state.account.error
+    error: state.user.error,
+    loggedIn: state.user.loggedIn
 })
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        registerUserAccount: (username, email, password) => dispatch(registerUserAccount(username, email, password))
+        authenticateUserAccount: (email, password) => dispatch(authenticateUserAccount(email, password))
     }
 }
-
 
 class Login extends Component {
     constructor() {
         super()
         this.state = {
-            username: '',
             password: '',
             email: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    componentWillReceiveProps(props) {
+        if (props.loggedIn)
+            props.history.push('/')
     }
 
     handleChange(event) {
@@ -78,15 +81,17 @@ class Login extends Component {
     handleSubmit(event) {
         event.preventDefault()
 
-        const { state: { username, email, password } } = this
+        const { state: { email, password } } = this
 
 
-        this.props.registerUserAccount(username, email, password)
+        this.props.authenticateUserAccount(email, password)
     }
 
     render() {
 
-        const { classes } = this.props
+        const { props: { classes, error, loggedIn } } = this
+
+        {loggedIn && <Redirect to="/" />}
 
         return <Box display="flex" className={classes.login}>
             <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>
@@ -96,8 +101,8 @@ class Login extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <label>
                                 <div>
-                                    <p>Username:</p>
-                                    <input type="text" onChange={this.handleChange} value={this.state.username} name="username"></input>
+                                    <p>E-mail:</p>
+                                    <input type="text" onChange={this.handleChange} value={this.state.email} name="email"></input>
                                 </div>
                             </label>
                             <label>
@@ -108,17 +113,13 @@ class Login extends Component {
                             </label>
                             <label>
                                 <div>
-                                    <p>E-mail:</p>
-                                    <input type="text" onChange={this.handleChange} value={this.state.email} name="email"></input>
-                                </div>
-                            </label>
-                            <label>
-                                <div>
                                     <input type="submit" value="Submit" />
                                 </div>
                             </label>
                         </form>
                     </div>
+
+                {error && <p>ERROR: {error}</p>}
 
                 </Box>
                 <footer className={classes.footer}>
@@ -129,4 +130,4 @@ class Login extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Login))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(withRouter(Login)))

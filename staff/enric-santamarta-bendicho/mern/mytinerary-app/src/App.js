@@ -4,11 +4,14 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import './App.css';
 import Itineraries from './components/Itineraries';
 import Activities from './components/Activities'
-import CreateAccount from './components/CreateAccount'
+import Register from './components/Register'
 import Login from './components/Login'
+import jwt_decode from "jwt-decode";
 
 
 function App() {
+
+  
 
 
   return (
@@ -19,7 +22,7 @@ function App() {
           <Route exact path='/cities' component={Cities} />
           <Route exact path='/itineraries' component={Itineraries} />
           <Route exact path='/activities' component={Activities} />
-          <Route exact path='/createaccount' component={CreateAccount} />
+          <Route exact path='/register' component={Register} />
           <Route exact path='/login' component={Login} />
         </Switch>
       </BrowserRouter>

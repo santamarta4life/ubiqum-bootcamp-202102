@@ -15,5 +15,3 @@ export function retrieveItineraries(city) {
                 }))
     }
 }
-
-// TODO rename retrieveItineraryByName to retrieveItinerariesByCity(name)

@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Home from './images/homeIcon.png';
 import { connect } from 'react-redux';
-import { createAccount } from '../store/actions/createAccountActions';
+import { registerUserAccount } from '../store/actions/userActions';
 
 const useStyles = theme => ({
     applogo: {
@@ -42,14 +42,14 @@ const useStyles = theme => ({
 });
 
 const mapStateToProps = (state) => ({
-    users: state.users.users,
-    error: state.users.error
+    user: state.user.user,
+    error: state.user.error
 })
 
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createAccount: (username, email, password, foto) => dispatch(createAccount(username, email, password, foto))
+        registerUserAccount: (name, email, password, foto) => dispatch(registerUserAccount(name, email, password, foto))
     }
 }
 
@@ -59,7 +59,7 @@ class CreateAccount extends Component {
     constructor() {
         super()
         this.state = {
-            username: '',
+            name: '',
             email: '',
             password: '',
             foto: ''
@@ -81,10 +81,10 @@ class CreateAccount extends Component {
     handleSubmit(event) {
         event.preventDefault()
 
-        const { state: { username, email, password, foto } } = this
+        const { state: { name, email, password, foto } } = this
 
 
-        this.props.createAccount(username, email, password, foto)
+        this.props.registerUserAccount(name, email, password, foto)
     }
 
 
@@ -100,8 +100,8 @@ class CreateAccount extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <label>
                             <div>
-                                <p>Username:</p>
-                                <input type="text" onChange={this.handleChange} value={this.state.username} name="username"></input>
+                                <p>Name:</p>
+                                <input type="text" onChange={this.handleChange} value={this.state.name} name="name"></input>
                             </div>
                         </label>
                         <label>

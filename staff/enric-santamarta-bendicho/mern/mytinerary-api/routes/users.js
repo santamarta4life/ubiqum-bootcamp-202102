@@ -6,14 +6,13 @@ const key = require('../keys')
 const jwt = require("jsonwebtoken")
 const passport = require('passport')
 const { authorize } = require('./passport')
-const User = require('../models/userModel');
 
 
 
 const router = express.Router()
 
 const retrieveAllUsers = require('../logic/retrieve-all-users')
-const createUser = require('../logic/create-user')
+const registerUser = require('../logic/register-user')
 const authenticateUser = require('../logic/authenticate-user');
 const retrieveUser = require('./handler/retrieve-user');
 
@@ -40,22 +39,22 @@ router.get('/all',
 
 /*post users*/
 router.post('/', body('email').isEmail().withMessage('please, introduce a valid e-mail adresse'), body('password').isLength({ min: 5 }).withMessage('password must be at least 5 chars long'), (req, res) => {
-   const { body: { username, email, password, foto } } = req
+    const { body: { name, email, password, foto } } = req
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-   bcrypt.hash(password, saltRounds, function (err, hash) {
+    bcrypt.hash(password, saltRounds, function (err, hash) {
         // Store hash in your password DB.
 
-        createUser(username, email, hash, foto)
+        registerUser(name, email, hash, foto)
             .then(user => {
                 res.send(user)
             })
             .catch(err => {
                 res.status(500).send(err.message)
-            }) 
-    }); 
+            })
+    });
 
 })
 
@@ -93,7 +92,7 @@ router.post('/auth', body('email').isEmail().withMessage('please, introduce a va
                             } else {
                                 res.json({
                                     success: true,
-                                    token: 'Bearer ' + token
+                                    token: token
                                 });
                             }
                         }

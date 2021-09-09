@@ -1,16 +1,16 @@
 const userModel = require('../models/userModel')
 
-module.exports = (username, email, password, foto) => {
+module.exports = (name, email, password, foto) => {
     const newUser = new userModel({
-        username, 
+        name, 
         email, 
         password, 
         foto
     })
-    return userModel.findOne({ username, email }) 
+    return userModel.findOne({ name, email }) 
         .then(user => {
             if (user)
-                throw new Error("The user " + username + " already exists in the database")
+                throw new Error("The user " + name + " already exists in the database")
 
             return newUser.save()
         })    
