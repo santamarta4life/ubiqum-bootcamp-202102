@@ -14,7 +14,9 @@ const router = express.Router()
 const retrieveAllUsers = require('../logic/retrieve-all-users')
 const registerUser = require('../logic/register-user')
 const authenticateUser = require('../logic/authenticate-user');
-const retrieveUser = require('./handler/retrieve-user');
+const retrieveUser = require('./handler/retrieve-user')
+
+
 
 
 router.use(passport.initialize())
@@ -39,7 +41,7 @@ router.get('/all',
 
 /*post users*/
 router.post('/', body('email').isEmail().withMessage('please, introduce a valid e-mail adresse'), body('password').isLength({ min: 5 }).withMessage('password must be at least 5 chars long'), (req, res) => {
-    const { body: { name, email, password, foto } } = req
+    const { body: { name, email, password, foto, favorites } } = req
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -47,7 +49,7 @@ router.post('/', body('email').isEmail().withMessage('please, introduce a valid 
     bcrypt.hash(password, saltRounds, function (err, hash) {
         // Store hash in your password DB.
 
-        registerUser(name, email, hash, foto)
+        registerUser(name, email, hash, foto, favorites)
             .then(user => {
                 res.send(user)
             })
@@ -104,6 +106,7 @@ router.post('/auth', body('email').isEmail().withMessage('please, introduce a va
         }
     })
 
+/*retrieve current User*/
 router.get('/', authorize, retrieveUser)
 
 module.exports = router

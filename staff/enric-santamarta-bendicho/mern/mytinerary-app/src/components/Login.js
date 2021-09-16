@@ -55,10 +55,12 @@ const mapDispatchToProps = (dispatch) => {
 class Login extends Component {
     constructor() {
         super()
+        
         this.state = {
             password: '',
             email: ''
         }
+
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }

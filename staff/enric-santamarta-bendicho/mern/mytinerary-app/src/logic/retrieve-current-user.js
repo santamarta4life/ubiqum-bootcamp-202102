@@ -1,18 +1,20 @@
 import axios from 'axios';
 
-export default async function (token) {
+export default async function () {
 
   return (async () => {
     try {
       const res = await axios.get('http://localhost:5000/users', {
         headers: {
-          'Authorization': 'Bearer ' + token
+          'Authorization': `Bearer ${localStorage.token}`
         }
       })
+
       const user = res.data
+
       return user
     } catch (error) {
-      const { status } = error
+      const { response: { status } } = error
 
       switch (true) {
         case status === 401:

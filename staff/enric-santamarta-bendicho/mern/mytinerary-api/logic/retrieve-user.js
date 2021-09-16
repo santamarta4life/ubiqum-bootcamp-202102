@@ -8,6 +8,7 @@ module.exports = id => {
 
         if (!user) throw new Error(`user with id ${id} not found`)
 
+        user.id = user._id.toString()
         delete user._id
         delete user.password
         delete user.__v

@@ -18,6 +18,17 @@ function itinerariesReducer(state = initialState, action) {
                 error:action.payload
             }
         }
+        case "ADD_TO_USER_FAVORITES":{ 
+            return{
+                ...state
+            }
+        }
+        case "ADD_TO_USER_FAVORITES_ERROR":{
+            return{
+                ...state,
+                error:action.payload
+            }
+        }
         default: return state
     }
 }

@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { decodeToken, validateEmail } from '../utils'
-import  retrieveCurrentUser  from '../logic/retrieve-current-user'
+import { validateEmail } from '../utils'
 
 
 export default function (email, password) {
@@ -14,10 +13,8 @@ export default function (email, password) {
             // Save to localStorage
             // Set token to localStorage
             const token = res.data.token
+            
             localStorage.token = token
-            decodeToken(token)
-            retrieveCurrentUser(token)
-
         } catch (error) {
             const { status } = error
 

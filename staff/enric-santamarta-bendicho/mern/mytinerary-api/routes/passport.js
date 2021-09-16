@@ -28,7 +28,7 @@ module.exports = {
                 return res.json({ error: error.message })
 
             if (!user) // user value is false (boolean) when the token is invalid
-                return res.json({ error: 'invalid token' })
+                return res.status(401).json({ error: 'invalid token' })
 
             req.user = user
 

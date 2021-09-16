@@ -6,7 +6,6 @@ import Itineraries from './components/Itineraries';
 import Activities from './components/Activities'
 import Register from './components/Register'
 import Login from './components/Login'
-import jwt_decode from "jwt-decode";
 
 
 function App() {

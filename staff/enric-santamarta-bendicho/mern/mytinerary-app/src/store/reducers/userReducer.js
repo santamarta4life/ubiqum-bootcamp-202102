@@ -1,7 +1,5 @@
 const initialState = {
-    email: '',
-    name: '',
-    foto: '',
+    user:[],
     registerIn:false,
     loggedIn:false
 }
@@ -32,9 +30,17 @@ function userReducer(state = initialState, action) {
                 error: action.error
             }
         }
-        case 'CURRENT_USER': {
+        case 'RETRIEVE_CURRENT_USER': {
             return{
-                ...state
+                ...state,
+                user:action.payload
+            }
+        }
+        case 'LOGOUT_USER': {
+            return{
+                ...state,
+                user:[],
+                loggedIn:false
             }
         }
         default:

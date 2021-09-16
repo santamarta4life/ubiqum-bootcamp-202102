@@ -1,18 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState,useEffect } from 'react';
 import { NavLink } from 'react-router-dom'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
 import { retrieveActivities } from '../store/actions/activitiesActions'
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { addToFavorites } from '../store/actions/itinerariesActions'
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import isUserLoggedIn from '../logic/is-user-logged-in';
+
+
 
 const useStyles = makeStyles({
     applogo: {
@@ -57,21 +62,52 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        retrieveActivities: itinerary => dispatch(retrieveActivities(itinerary))
+        retrieveActivities: itinerary => dispatch(retrieveActivities(itinerary)),
+        addToFavorites: itinerary => dispatch(addToFavorites(itinerary))
     }
 }
 
-function Itineraries({ itineraries, retrieveActivities }) {
+function Itineraries({ user, itineraries, retrieveActivities, addToFavorites }) {
+
+    const [clicked, setClicked] = useState(false);
 
     const classes = useStyles();
 
+
+    const handleClickFavorites = (event) => {
+
+        setClicked(prevClicked => !prevClicked);
+
+        const itinerary = event.currentTarget.value
+
+        addToFavorites(itinerary)
+    }
+
     const handleClickActivities = (event) => {
+
         const itinerary = event.target.value
 
         retrieveActivities(itinerary)
     }
 
-    const itinerariesRender = itineraries.map((itinerary, index) => <TableRow key={index}><TableCell key={index} align="center" className={classes.tablecell}><div><h2>{itinerary.title}</h2></div><div>Duration:{itinerary.duration}</div><div>Rating:{itinerary.rating}</div></TableCell><TableCell align="center" className={classes.tablecell} ><img style={{ width: 200, height: 100 }} alt="city itineraries" src={itinerary.profilePicture} /></TableCell><TableCell align="center" className={classes.tablecell}><NavLink to='/Activities' ><button onClick={handleClickActivities} value={itinerary.title}>Activities </button></NavLink></TableCell></TableRow>)
+    /*
+    const fav = user.favorites.includes(itinerary.id)
+
+    clicked || fav? corazon lleno : corazon vacio
+    */
+
+    const itinerariesRender = itineraries.map((itinerary, index) => 
+        <TableRow key={index}>
+            <TableCell key={index} align="center" className={classes.tablecell}>
+                <div><h2>{itinerary.title}</h2>
+                </div><div>Duration:{itinerary.duration}</div>
+                <div>Rating:{itinerary.rating}</div>
+            </TableCell>
+            <TableCell align="center" className={classes.tablecell} ><img style={{ width: 200, height: 100 }} alt="city itineraries" src={itinerary.profilePicture} /></TableCell>
+            <TableCell align="center" className={classes.tablecell}>
+                <NavLink to='/Activities' ><button onClick={handleClickActivities} value={itinerary.title}>Activities </button></NavLink> {isUserLoggedIn() && <IconButton key={index} onClick={handleClickFavorites} value={itinerary._id}>{clicked ? <FavoriteIcon /> : <FavoriteBorderIcon />}</IconButton>}
+            </TableCell>
+        </TableRow>)
 
     return <Box display="flex" className={classes.itineraries}>
         <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>
@@ -81,11 +117,11 @@ function Itineraries({ itineraries, retrieveActivities }) {
                 </div>
                 <div>
                     <TableContainer>
-                            <Table size="small">
-                                <TableBody>
-                                        {itinerariesRender}
-                                </TableBody>
-                            </Table>
+                        <Table size="small">
+                            <TableBody>
+                                {itinerariesRender}
+                            </TableBody>
+                        </Table>
                     </TableContainer>
                 </div>
             </Box>

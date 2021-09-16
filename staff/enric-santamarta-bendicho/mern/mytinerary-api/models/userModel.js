@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const Schema = mongoose.Schema
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,7 +17,11 @@ const userSchema = new mongoose.Schema({
     },
     foto:{
         type:String
-    }
+    },
+    favorites:[{
+       type: Schema.Types.ObjectId, 
+       ref: 'itinerary'
+    }]
 })
 
 //name of module is the singular version (user) of the database name (users)
