@@ -57,7 +57,9 @@ function Activities({ activities }) {
 
     const classes = useStyles();
 
-    const activitiesRender = activities.map((activity, index) => <TableRow key={index}><TableCell className={classes.tablecell} align="center" key={index}><h2>{activity.activity}</h2></TableCell><TableCell className={classes.tablecell}><img style={{ width: 200, height: 100 }} alt="activity itineraries" src={activity.image} /></TableCell></TableRow>)
+    const activitiesRender = activities.map((activity, index) => <TableRow key={index}><TableCell className={classes.tablecell} align="center" key={index}><h2>{activity.activity}</h2>
+    </TableCell><TableCell className={classes.tablecell}><img style={{ width: 200, height: 100 }} alt="activity itineraries" src={activity.image} /></TableCell>
+    </TableRow>)
 
     return <div className={classes.activities}>
         <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>

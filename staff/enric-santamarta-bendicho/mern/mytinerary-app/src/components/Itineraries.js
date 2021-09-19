@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
 import { retrieveActivities } from '../store/actions/activitiesActions'
+import {retrieveUser} from '../store/actions/userActions'
 import { makeStyles } from '@material-ui/core/styles';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { addToFavorites } from '../store/actions/itinerariesActions'
@@ -56,6 +57,7 @@ const useStyles = makeStyles({
 
 
 const mapStateToProps = (state) => ({
+    user: state.user.user,
     itineraries: state.itineraries.itineraries,
     error: state.itineraries.error
 })
@@ -63,11 +65,28 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         retrieveActivities: itinerary => dispatch(retrieveActivities(itinerary)),
-        addToFavorites: itinerary => dispatch(addToFavorites(itinerary))
+        addToFavorites: itinerary => dispatch(addToFavorites(itinerary)),
+        retrieveUser:() => dispatch(retrieveUser())
     }
 }
 
 function Itineraries({ user, itineraries, retrieveActivities, addToFavorites }) {
+
+    useEffect(() => {
+        if (isUserLoggedIn()){ 
+        (async () => {
+            try {
+                for (var i = -1; i++; i <= itineraries.length) {
+                    const fav = user.favorites.includes(itineraries[i]._id)
+                    if (fav) { setClicked(true) }
+                }
+
+            } catch (error) {
+                alert(error.message)
+            }
+        })() }
+    },[itineraries]) // Only re-subscribe if props.itineraries changes
+    
 
     const [clicked, setClicked] = useState(false);
 
@@ -90,13 +109,7 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites }) 
         retrieveActivities(itinerary)
     }
 
-    /*
-    const fav = user.favorites.includes(itinerary.id)
-
-    clicked || fav? corazon lleno : corazon vacio
-    */
-
-    const itinerariesRender = itineraries.map((itinerary, index) => 
+    const itinerariesRender = itineraries.map((itinerary, index) =>
         <TableRow key={index}>
             <TableCell key={index} align="center" className={classes.tablecell}>
                 <div><h2>{itinerary.title}</h2>

@@ -15,7 +15,6 @@ import { connect } from 'react-redux';
 import { handleFilterCities, retrieveCities } from '../store/actions/cityActions';
 import { retrieveItineraries } from '../store/actions/itinerariesActions'
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 
 
 const useStyles = theme => ({
@@ -114,7 +113,10 @@ class Cities extends Component {
 
         const _cities = filteredCities && filteredCities.length ? filteredCities : cities
 
-        const citiesRender = _cities.map((city, index) => <TableRow key={index}><TableCell key={index} className={classes.tablecell} align="center"><NavLink to='/itineraries'><button> {city.name} </button></NavLink> </TableCell><TableCell className={classes.tablecell} align="center"><img style={{ width: 200, height: 100 }} alt="city" src={city.image} /> </TableCell><TableCell className={classes.tablecell} align="center"> {city.country} </TableCell></TableRow>)
+        const citiesRender = _cities.map((city, index) => <TableRow key={index}><TableCell key={index} className={classes.tablecell} align="center">
+            <NavLink to='/itineraries'><button> {city.name} </button></NavLink> </TableCell>
+            <TableCell className={classes.tablecell} align="center"><img style={{ width: 200, height: 100 }} alt="city" src={city.image} /> </TableCell>
+            <TableCell className={classes.tablecell} align="center"> {city.country} </TableCell></TableRow>)
 
 
         return <Box className={classes.cities}>
