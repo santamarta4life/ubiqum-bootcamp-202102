@@ -11,7 +11,8 @@ import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
 import { retrieveActivities } from '../store/actions/activitiesActions'
-import {retrieveUser} from '../store/actions/userActions'
+import { retrieveItineraries } from '../store/actions/itinerariesActions'
+import { retrieveUser } from '../store/actions/userActions'
 import { makeStyles } from '@material-ui/core/styles';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { addToFavorites } from '../store/actions/itinerariesActions'
@@ -65,41 +66,49 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         retrieveActivities: itinerary => dispatch(retrieveActivities(itinerary)),
-        addToFavorites: itinerary => dispatch(addToFavorites(itinerary)),
-        retrieveUser:() => dispatch(retrieveUser())
+        addToFavorites: itineraryId => dispatch(addToFavorites(itineraryId)),
+        retrieveUser: () => dispatch(retrieveUser()),
+        retrieveItineraries: city => dispatch(retrieveItineraries(city))
     }
 }
 
-function Itineraries({ user, itineraries, retrieveActivities, addToFavorites }) {
+function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, retrieveUser, retrieveItineraries }) {
 
     useEffect(() => {
-        if (isUserLoggedIn()){ 
+
         (async () => {
             try {
-                for (var i = -1; i++; i <= itineraries.length) {
-                    const fav = user.favorites.includes(itineraries[i]._id)
-                    if (fav) { setClicked(true) }
-                }
+                const user = await retrieveUser()
 
-            } catch (error) {
+                //const iteneraries = await retrieveItineraries(sessionStorage.getItem('city')) // TODO do not use session storgage, but receive the city name in a route param (see react router dom params and the hook useParams)
+                const { cityName } = useParams()
+                const iteneraries = await retrieveItineraries(cityName)
+            }
+            catch (error) {
                 alert(error.message)
             }
-        })() }
-    },[itineraries]) // Only re-subscribe if props.itineraries changes
-    
-
-    const [clicked, setClicked] = useState(false);
+        })()
+    }, []); // if itineraries changes, useEffect will run again
+                        // if you want to run only once, just leave array empty []
 
     const classes = useStyles();
 
+    const [favs, setFavs] = useState(user.favorites)
 
-    const handleClickFavorites = (event) => {
+    const handleClickFavorite = (event) => {
 
-        setClicked(prevClicked => !prevClicked);
+        const itineraryId = event.currentTarget.value
 
-        const itinerary = event.currentTarget.value
+        const index = favs.includes(itineraryId)
 
-        addToFavorites(itinerary)
+        if (index > -1)
+            setFavs(favs.slice(index, 1))
+        if (index > 0)
+            setFavs(favs.slice(index, 0))
+        else
+            setFavs([...favs, itineraryId])
+
+        addToFavorites(itineraryId)
     }
 
     const handleClickActivities = (event) => {
@@ -118,7 +127,8 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites }) 
             </TableCell>
             <TableCell align="center" className={classes.tablecell} ><img style={{ width: 200, height: 100 }} alt="city itineraries" src={itinerary.profilePicture} /></TableCell>
             <TableCell align="center" className={classes.tablecell}>
-                <NavLink to='/Activities' ><button onClick={handleClickActivities} value={itinerary.title}>Activities </button></NavLink> {isUserLoggedIn() && <IconButton key={index} onClick={handleClickFavorites} value={itinerary._id}>{clicked ? <FavoriteIcon /> : <FavoriteBorderIcon />}</IconButton>}
+                <NavLink to='/Activities' ><button onClick={handleClickActivities} value={itinerary.title}>Activities </button></NavLink>
+                {isUserLoggedIn() && <IconButton key={index} onClick={handleClickFavorite} value={itinerary._id}>{favs.includes(itinerary._id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}</IconButton>}
             </TableCell>
         </TableRow>)
 

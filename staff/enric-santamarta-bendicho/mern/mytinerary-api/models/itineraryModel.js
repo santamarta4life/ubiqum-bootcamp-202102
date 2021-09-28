@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-
+//usar CityID en vez de nombre
 const itinerarySchema = new mongoose.Schema({
     title: {
         type: String,
@@ -18,7 +18,7 @@ const itinerarySchema = new mongoose.Schema({
         type: String,
         required: true
     }, 
-    city: {
+    cityID: {
         type: String,
         required: true
     }, 

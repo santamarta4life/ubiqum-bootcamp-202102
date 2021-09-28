@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-export default function (itinerary) {
-    if (typeof itinerary !== 'string') throw new TypeError(`${itinerary} is not a string`)
+export default function (itineraryId) {
+    if (typeof itineraryId !== 'string') throw new TypeError(`${itineraryId} is not a string`)
     const body = ''
 
     return (async () => {
         try {
-            await axios.post('http://localhost:5000/itineraries/toggle-favorite/' + itinerary, body, {
+            await axios.post('http://localhost:5000/itineraries/toggle-favorite/' + itineraryId, body, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.token}`
                 }

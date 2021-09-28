@@ -90,16 +90,16 @@ class Cities extends Component {
 
     componentDidMount() {
         this.props.retrieveCities()
-
-
     }
 
     handleFilter = (filter) => {
         this.props.handleFilterCities(filter)
     }
 
-    handleClick = (event) => {
+    handleClick = (event ) => {
         const city = event.target.innerText
+
+        sessionStorage.setItem('city', city)
 
         this.props.retrieveItineraries(city)
     }
@@ -114,10 +114,11 @@ class Cities extends Component {
         const _cities = filteredCities && filteredCities.length ? filteredCities : cities
 
         const citiesRender = _cities.map((city, index) => <TableRow key={index}><TableCell key={index} className={classes.tablecell} align="center">
-            <NavLink to='/itineraries'><button> {city.name} </button></NavLink> </TableCell>
+            <NavLink to={`/cities/${city.name}/itineraries`}><button> {city.name} </button></NavLink> </TableCell>
             <TableCell className={classes.tablecell} align="center"><img style={{ width: 200, height: 100 }} alt="city" src={city.image} /> </TableCell>
             <TableCell className={classes.tablecell} align="center"> {city.country} </TableCell></TableRow>)
 
+// TODO make a route with path 'cities/:cityName/itineraries'
 
         return <Box className={classes.cities}>
             <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox} >

@@ -17,9 +17,9 @@ export function retrieveItineraries(city) {
     }
 }
 
-export function addToFavorites(itinerary) {
+export function addToFavorites(itineraryId) {
     return dispatch => {
-        addUserFavorites(itinerary)
+        addUserFavorites(itineraryId)
             .then(() =>
                 dispatch({
                     type: "ADD_TO_USER_FAVORITES"
