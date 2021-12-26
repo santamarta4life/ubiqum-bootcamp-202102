@@ -1,9 +1,10 @@
-import retrieveItinerariesByCity from '../../logic/retrieve-itinerary-by-city'
+import retrieveItinerariesByCityID from '../../logic/retrieve-itinerary-by-cityID'
 import addUserFavorites from '../../logic/add-user-favorites'
+import sendTheComment from '../../logic/send-comment'
 
-export function retrieveItineraries(city) {
+export function retrieveItineraries(cityID) {
    return dispatch => {
-        retrieveItinerariesByCity(city)
+        retrieveItinerariesByCityID(cityID)
             .then((itineraries) =>
                 dispatch({
                     type: "RETRIEVE_ALL_ITINERARIES",
@@ -28,6 +29,22 @@ export function addToFavorites(itineraryId) {
                 dispatch({
                     type:"ADD_TO_USER_FAVORITES_ERROR",
                     payload: error.message
+                }))
+    }
+}
+
+export function sendComment(comment) {
+    return dispatch => {
+        sendTheComment(comment)
+            .then(() =>
+                dispatch({
+                    type:"SEND_COMMENT",
+                    payload: comment
+                }))
+            .catch(error => 
+                dispatch({
+                    type:"SEND_COMMENT_ERROR",
+                    payload:error.message
                 }))
     }
 }

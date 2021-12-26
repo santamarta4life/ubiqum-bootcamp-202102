@@ -19,8 +19,8 @@ function App() {
         <Switch>
           <Route exact path='/' component={Landing} />
           <Route exact path='/cities' component={Cities} />
-          <Route exact path='/itineraries' component={Itineraries} />
-          <Route exact path='/activities' component={Activities} />
+          <Route exact path='/cities/:cityID/itineraries' component={Itineraries} />
+          <Route exact path='/cities/:itineraryID/activities' component={Activities} />
           <Route exact path='/register' component={Register} />
           <Route exact path='/login' component={Login} />
         </Switch>

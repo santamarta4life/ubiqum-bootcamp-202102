@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './Cities.css'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -97,9 +96,7 @@ class Cities extends Component {
     }
 
     handleClick = (event ) => {
-        const city = event.target.innerText
-
-        sessionStorage.setItem('city', city)
+        const city = event.target.value
 
         this.props.retrieveItineraries(city)
     }
@@ -114,11 +111,9 @@ class Cities extends Component {
         const _cities = filteredCities && filteredCities.length ? filteredCities : cities
 
         const citiesRender = _cities.map((city, index) => <TableRow key={index}><TableCell key={index} className={classes.tablecell} align="center">
-            <NavLink to={`/cities/${city.name}/itineraries`}><button> {city.name} </button></NavLink> </TableCell>
+            <NavLink to={`/cities/${city._id}/itineraries`}><button value={city._id}> {city.name} </button></NavLink> </TableCell>
             <TableCell className={classes.tablecell} align="center"><img style={{ width: 200, height: 100 }} alt="city" src={city.image} /> </TableCell>
             <TableCell className={classes.tablecell} align="center"> {city.country} </TableCell></TableRow>)
-
-// TODO make a route with path 'cities/:cityName/itineraries'
 
         return <Box className={classes.cities}>
             <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox} >

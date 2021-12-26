@@ -17,6 +17,10 @@ const activitySchema = new mongoose.Schema({
     itinerary:{
         type:String,
         required:true
+    },
+    itineraryID:{
+        type:String,
+        required: true
     }
 })
 

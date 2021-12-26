@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,6 +16,7 @@ import { retrieveUser } from '../store/actions/userActions'
 import { makeStyles } from '@material-ui/core/styles';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { addToFavorites } from '../store/actions/itinerariesActions'
+import { sendComment } from '../store/actions/itinerariesActions'
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import isUserLoggedIn from '../logic/is-user-logged-in';
 
@@ -65,31 +66,34 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        retrieveActivities: itinerary => dispatch(retrieveActivities(itinerary)),
+        retrieveActivities: itineraryID => dispatch(retrieveActivities(itineraryID)),
         addToFavorites: itineraryId => dispatch(addToFavorites(itineraryId)),
         retrieveUser: () => dispatch(retrieveUser()),
-        retrieveItineraries: city => dispatch(retrieveItineraries(city))
+        retrieveItineraries: cityID => dispatch(retrieveItineraries(cityID)),
+        sendComment: comment => dispatch(sendComment(comment))
     }
 }
 
-function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, retrieveUser, retrieveItineraries }) {
+function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, retrieveUser, retrieveItineraries, sendComment }) {
 
     useEffect(() => {
 
         (async () => {
             try {
+
                 const user = await retrieveUser()
 
-                //const iteneraries = await retrieveItineraries(sessionStorage.getItem('city')) // TODO do not use session storgage, but receive the city name in a route param (see react router dom params and the hook useParams)
-                const { cityName } = useParams()
-                const iteneraries = await retrieveItineraries(cityName)
+                const itineraries = await retrieveItineraries(cityID)
+
             }
             catch (error) {
                 alert(error.message)
             }
         })()
-    }, []); // if itineraries changes, useEffect will run again
-                        // if you want to run only once, just leave array empty []
+    }, []);
+    // if you want to run only once, just leave array empty []
+
+    const { cityID } = useParams()
 
     const classes = useStyles();
 
@@ -113,24 +117,73 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, re
 
     const handleClickActivities = (event) => {
 
-        const itinerary = event.target.value
+        const itineraryID = event.currentTarget.value
 
-        retrieveActivities(itinerary)
+        retrieveActivities(itineraryID)
     }
 
+    const handleClickComment = (event) => {
+
+        event.preventDefault()
+
+        const comment = event.target.text.value
+
+        const itinerary = itineraries[0]._id
+
+        const user = user.id
+
+        sendComment(comment)
+    }
+
+    const comments = itineraries.comment
+
     const itinerariesRender = itineraries.map((itinerary, index) =>
-        <TableRow key={index}>
-            <TableCell key={index} align="center" className={classes.tablecell}>
-                <div><h2>{itinerary.title}</h2>
-                </div><div>Duration:{itinerary.duration}</div>
-                <div>Rating:{itinerary.rating}</div>
-            </TableCell>
-            <TableCell align="center" className={classes.tablecell} ><img style={{ width: 200, height: 100 }} alt="city itineraries" src={itinerary.profilePicture} /></TableCell>
-            <TableCell align="center" className={classes.tablecell}>
-                <NavLink to='/Activities' ><button onClick={handleClickActivities} value={itinerary.title}>Activities </button></NavLink>
-                {isUserLoggedIn() && <IconButton key={index} onClick={handleClickFavorite} value={itinerary._id}>{favs.includes(itinerary._id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}</IconButton>}
-            </TableCell>
-        </TableRow>)
+
+    
+        <TableBody key={index}>
+            <TableRow key={index}>
+                <TableCell key={index} align="center" className={classes.tablecell}>
+                    <div><h2>{itinerary.title}</h2>
+                    </div><div>Duration:{itinerary.duration}</div>
+                    <div>Rating:{itinerary.rating}</div>
+                </TableCell>
+                <TableCell align="center" className={classes.tablecell} ><img style={{ width: 200, height: 100 }} alt="city itineraries" src={itinerary.profilePicture} /></TableCell>
+                <TableCell align="center" className={classes.tablecell}>
+                    <NavLink to={`/cities/${itinerary._id}/Activities`} ><button onClick={handleClickActivities} value={itinerary.title}>Activities </button></NavLink>
+                    {isUserLoggedIn() && <IconButton key={index} onClick={handleClickFavorite} value={itinerary._id}>{favs.includes(itinerary._id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}</IconButton>}
+                </TableCell>
+            </TableRow>
+            {comments.map((comment, index) => 
+            <TableRow key = {index}>
+                <TableCell></TableCell>
+                <TableCell>
+                  
+                    <TableCell key = {index}>
+                        <img style={{ width: 50, height: 50 }} alt="city itineraries" src={comment[index].user[index].foto} />
+                    </TableCell>
+                    <TableCell>
+                        {comment[index].user[index].name}
+                    </TableCell>
+                    <TableCell>
+                        {comment[index].comment}
+                    </TableCell>
+                </TableCell>
+                <TableCell></TableCell>
+            </TableRow> )}
+            <TableRow>
+                <TableCell></TableCell>
+                <TableCell>
+                    {isUserLoggedIn() &&
+                        <form onSubmit={handleClickComment}>
+                            <input type="text" id="text" name="fname" height="200" />
+                            <button>Comment</button>
+                        </form>}
+                </TableCell>
+                <TableCell></TableCell>
+            </TableRow>
+        </TableBody>)
+
+
 
     return <Box display="flex" className={classes.itineraries}>
         <Box bgcolor="success.main" borderRadius={40} className={classes.bigbox}>

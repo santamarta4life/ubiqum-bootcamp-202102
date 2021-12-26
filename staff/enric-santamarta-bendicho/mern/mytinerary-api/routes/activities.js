@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 const retrieveAllActivities = require('../logic/retrieve-all-activities')
-const retrieveAcitivtyByItinerary = require('../logic/retrieve-activity-by-itinerary')
+const retrieveAcitivtyByItinerary = require('../logic/retrieve-activity-by-itineraryID')
 
 
 router.get('/test', (req, res) => {
@@ -22,9 +22,9 @@ router.get('/all',
     })
 
 /*get a specific activity after its itinerary*/
-router.get('/:itinerary',
+router.get('/:itineraryID',
     (req, res) => {
-        retrieveAcitivtyByItinerary(req.params.itinerary)
+        retrieveAcitivtyByItinerary(req.params.itineraryID)
             .then(activity => {
                 res.send(activity)
             })

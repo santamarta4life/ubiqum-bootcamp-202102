@@ -11,17 +11,21 @@ const itinerarySchema = new mongoose.Schema({
         required: true
     },
     hashtags: {
-        type: [String], 
+        type: [String],
         required: true
-    }, 
+    },
     rating: {
         type: String,
         required: true
-    }, 
+    },
+    city: {
+        type: String,
+        required: true
+    },
     cityID: {
         type: String,
         required: true
-    }, 
+    },
     country: {
         type: String,
         required: true
@@ -30,8 +34,7 @@ const itinerarySchema = new mongoose.Schema({
         type: String,
         required: true
     }
-
 })
 
-//name of module is the singular version (city) of the database name (cities)
+//name of module is the singular version (itinerary) of the database name (itineraries)
 module.exports = mongoose.model('itinerary', itinerarySchema)

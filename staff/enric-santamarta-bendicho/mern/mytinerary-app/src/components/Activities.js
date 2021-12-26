@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { NavLink, useParams } from 'react-router-dom'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import { retrieveActivities } from '../store/actions/activitiesActions';
 
 
 const useStyles = makeStyles({
@@ -53,7 +54,28 @@ const mapStateToProps = (state) => ({
     error: state.activities.error
 })
 
-function Activities({ activities }) {
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        retrieveActivities: itineraryID => dispatch(retrieveActivities(itineraryID)),
+    }
+}
+
+function Activities({ activities, retrieveActivities }) {
+
+    useEffect(() => {
+
+        (async () => {
+            try {
+                const activities = await retrieveActivities(itineraryID)
+            }
+            catch (error) {
+                alert(error.message)
+            }
+        })()
+    }, []);
+
+    const { itineraryID } = useParams()
 
     const classes = useStyles();
 
@@ -69,11 +91,11 @@ function Activities({ activities }) {
                 </div>
                 <div>
                     <TableContainer>
-                            <Table size="small">
-                                <TableBody>
-                                    {activitiesRender}
-                                </TableBody>
-                            </Table>
+                        <Table size="small">
+                            <TableBody>
+                                {activitiesRender}
+                            </TableBody>
+                        </Table>
                     </TableContainer>
                 </div>
             </Box>
@@ -86,4 +108,4 @@ function Activities({ activities }) {
 }
 
 
-export default connect(mapStateToProps)(Activities)
+export default connect(mapStateToProps, mapDispatchToProps)(Activities)

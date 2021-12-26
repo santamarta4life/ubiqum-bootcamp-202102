@@ -1,8 +1,8 @@
-import retrieveActivitiesByItinerary from '../../logic/retrieve-activity-by-itinerary'
+import retrieveActivitiesByItineraryID from '../../logic/retrieve-activity-by-itineraryID'
 
-export function retrieveActivities(itinerary) {
+export function retrieveActivities(itineraryID) {
     return dispatch => {
-         retrieveActivitiesByItinerary(itinerary)
+         retrieveActivitiesByItineraryID(itineraryID)
              .then((activities) =>
                  dispatch({
                      type: "RETRIEVE_ALL_ACTIVITIES",

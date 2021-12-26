@@ -1,3 +1,3 @@
 const itineraryModel = require('../models/itineraryModel')
 
-module.exports = city => itineraryModel.find({ city })
+module.exports = cityID => itineraryModel.find({ cityID })

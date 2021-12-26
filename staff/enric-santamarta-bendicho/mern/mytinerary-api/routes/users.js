@@ -7,8 +7,6 @@ const jwt = require("jsonwebtoken")
 const passport = require('passport')
 const { authorize } = require('./passport')
 
-
-
 const router = express.Router()
 
 const retrieveAllUsers = require('../logic/retrieve-all-users')
