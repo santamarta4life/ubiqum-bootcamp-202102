@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-export default function (comment) {
+export default function (comment,itinerary) {
     if (typeof comment !== 'string') throw new TypeError(`${comment} is not a string`)
     const body = { comment: 'comment' , }
 
     return (async () => {
         try {
-            await axios.post('http://localhost:5000/comments', body, {
+            await axios.post('http://localhost:5000/comments/' + itinerary + '/' + comment, body, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.token}`
                 }

@@ -18,6 +18,8 @@ module.exports = async (comment, userId, itineraryId) => {
     var newComment = new commentModel ({ comment: comment, user: userId, itineraryId: itineraryId})
 
     await newComment.save()
+    await itinerary.comments.push(newComment._id)
+    await itinerary.save()
     return newComment
 
 }

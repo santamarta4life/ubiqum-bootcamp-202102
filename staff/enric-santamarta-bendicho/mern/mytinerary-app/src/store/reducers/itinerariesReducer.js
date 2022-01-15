@@ -29,6 +29,17 @@ function itinerariesReducer(state = initialState, action) {
                 error:action.payload
             }
         }
+        case "SEND_COMMENT":{ 
+            return{
+                ...state
+            }
+        }
+        case "SEND_COMMENT_ERROR":{
+            return{
+                ...state,
+                error:action.payload
+            }
+        }
         default: return state
     }
 }

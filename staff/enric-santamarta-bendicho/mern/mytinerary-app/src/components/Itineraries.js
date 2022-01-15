@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import Home from './images/homeIcon.png'
 import { connect } from 'react-redux';
 import { retrieveActivities } from '../store/actions/activitiesActions'
-import { retrieveItineraries } from '../store/actions/itinerariesActions'
+import { retrieveComments, retrieveItineraries } from '../store/actions/itinerariesActions'
 import { retrieveUser } from '../store/actions/userActions'
 import { makeStyles } from '@material-ui/core/styles';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -61,7 +61,7 @@ const useStyles = makeStyles({
 const mapStateToProps = (state) => ({
     user: state.user.user,
     itineraries: state.itineraries.itineraries,
-    error: state.itineraries.error
+    error: state.itineraries.error,
 })
 
 const mapDispatchToProps = (dispatch) => {
@@ -70,7 +70,7 @@ const mapDispatchToProps = (dispatch) => {
         addToFavorites: itineraryId => dispatch(addToFavorites(itineraryId)),
         retrieveUser: () => dispatch(retrieveUser()),
         retrieveItineraries: cityID => dispatch(retrieveItineraries(cityID)),
-        sendComment: comment => dispatch(sendComment(comment))
+        sendComment: (comment,itinerary) => dispatch(sendComment(comment,itinerary))
     }
 }
 
@@ -90,7 +90,7 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, re
                 alert(error.message)
             }
         })()
-    }, []);
+    }, [itineraries]);
     // if you want to run only once, just leave array empty []
 
     const { cityID } = useParams()
@@ -128,18 +128,16 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, re
 
         const comment = event.target.text.value
 
-        const itinerary = itineraries[0]._id
+        const index = event.target.getAttribute("data-index")
 
-        const user = user.id
+        const itinerary = itineraries[index]._id
 
-        sendComment(comment)
+        sendComment(comment, itinerary)
     }
 
-    const comments = itineraries.comment
 
     const itinerariesRender = itineraries.map((itinerary, index) =>
 
-    
         <TableBody key={index}>
             <TableRow key={index}>
                 <TableCell key={index} align="center" className={classes.tablecell}>
@@ -153,28 +151,16 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, re
                     {isUserLoggedIn() && <IconButton key={index} onClick={handleClickFavorite} value={itinerary._id}>{favs.includes(itinerary._id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}</IconButton>}
                 </TableCell>
             </TableRow>
-            {comments.map((comment, index) => 
-            <TableRow key = {index}>
-                <TableCell></TableCell>
-                <TableCell>
-                  
-                    <TableCell key = {index}>
-                        <img style={{ width: 50, height: 50 }} alt="city itineraries" src={comment[index].user[index].foto} />
-                    </TableCell>
-                    <TableCell>
-                        {comment[index].user[index].name}
-                    </TableCell>
-                    <TableCell>
-                        {comment[index].comment}
-                    </TableCell>
-                </TableCell>
-                <TableCell></TableCell>
-            </TableRow> )}
+            {itinerary.comments.map((comment, subindex) => <TableRow key={subindex}>
+                {comment.user.map((user) => <TableCell align="center"><h2>{user.name}</h2></TableCell>)}
+                {comment.user.map((user) => <TableCell align="center"><img style={{ width: 70, height: 70 }} alt="user fotos" src={user.foto} /></TableCell>)}
+                <TableCell align="center">{comment.comment}</TableCell>
+            </TableRow>)}
             <TableRow>
                 <TableCell></TableCell>
                 <TableCell>
                     {isUserLoggedIn() &&
-                        <form onSubmit={handleClickComment}>
+                        <form onSubmit={handleClickComment} key={index} data-index={index}>
                             <input type="text" id="text" name="fname" height="200" />
                             <button>Comment</button>
                         </form>}
@@ -182,7 +168,6 @@ function Itineraries({ user, itineraries, retrieveActivities, addToFavorites, re
                 <TableCell></TableCell>
             </TableRow>
         </TableBody>)
-
 
 
     return <Box display="flex" className={classes.itineraries}>

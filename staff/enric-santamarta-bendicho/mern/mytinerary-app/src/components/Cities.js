@@ -99,6 +99,7 @@ class Cities extends Component {
         const city = event.target.value
 
         this.props.retrieveItineraries(city)
+        
     }
 
 

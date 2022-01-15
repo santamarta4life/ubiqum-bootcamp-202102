@@ -6,12 +6,12 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    user:[{
+    user: [{
         type: Schema.Types.ObjectId,
         ref: 'user'
     }],
-    itineraryId:[{
-        type:Schema.Types.ObjectId,
+    itineraryId: [{
+        type: Schema.Types.ObjectId,
         ref: 'itinerary'
     }]
 })
